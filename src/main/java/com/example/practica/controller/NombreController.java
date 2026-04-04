@@ -11,6 +11,11 @@ public class NombreController {
 
     private List<String> nombres = new ArrayList<>();
 
+    @GetMapping("/nombre")
+    public String mostrarNombreCompleto() {
+        return "Jhamel Javier Pinto Ubaldes";
+    }
+
     @GetMapping("/nombres")
     public List<String> obtenerNombres() {
         return nombres;

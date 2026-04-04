@@ -27,7 +27,8 @@ public class PeliculasController {
             new Pelicula("Oppenheimer", "Christopher Nolan", 2023, 180, "Drama", "Creación de la bomba atómica."),
             new Pelicula("The Batman", "Matt Reeves", 2022, 176, "Acción", "Batman enfrenta al Acertijo."),
             new Pelicula("Jurassic World Dominion", "Colin Trevorrow", 2022, 147, "Aventura",
-                    "Humanos y dinosaurios conviven.")));
+                    "Humanos y dinosaurios conviven.")
+    ));
 
     @GetMapping("/peliculas")
     public List<Pelicula> obtenerPeliculas(
