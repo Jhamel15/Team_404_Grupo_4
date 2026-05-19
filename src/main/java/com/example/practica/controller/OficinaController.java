@@ -12,14 +12,12 @@ public class OficinaController {
 
     private List<Oficina> listaOficinas = new ArrayList<>();
 
-    
     public OficinaController() {
         listaOficinas.add(new Oficina(1, "Oficina Administrativa", "Área principal"));
         listaOficinas.add(new Oficina(2, "Área Financiera", "Control financiero"));
         listaOficinas.add(new Oficina(3, "Dirección General", "Gerencia general"));
     }
 
-   
     @GetMapping
     public List<Oficina> obtenerOficinas() {
         return listaOficinas;
@@ -32,10 +30,9 @@ public class OficinaController {
         return oficina;
     }
 
-    
     @PutMapping("/{codigo}")
     public Oficina actualizarOficina(@PathVariable int codigo,
-                                     @RequestBody Oficina oficinaActualizada) {
+            @RequestBody Oficina oficinaActualizada) {
 
         for (Oficina oficina : listaOficinas) {
 
@@ -51,7 +48,6 @@ public class OficinaController {
         return null;
     }
 
-    
     @DeleteMapping("/{codigo}")
     public String eliminarOficina(@PathVariable int codigo) {
 
