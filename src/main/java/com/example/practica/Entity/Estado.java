@@ -1,8 +1,16 @@
-package com.example.practica.model;
+package com.example.practica.Entity;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "estado")
 public class Estado {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer codestado;
+
+    @Column(nullable = false)
     private String nomestado;
 
     public Estado() {
