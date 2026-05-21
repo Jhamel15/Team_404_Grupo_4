@@ -1,4 +1,4 @@
-// Source code is decompiled from a .class file using FernFlower decompiler.
+
 package com.example.practica.controller;
 
 import com.example.practica.model.Usuario;
