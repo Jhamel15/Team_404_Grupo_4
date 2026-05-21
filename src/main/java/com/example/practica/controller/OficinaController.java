@@ -1,57 +1,70 @@
 package com.example.practica.controller;
 
-import com.example.practica.model.Oficina;
+import com.example.practica.Entity.Oficina;
+import com.example.practica.services.OficinaService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/oficinas")
+@RequestMapping("/api/oficina")
 public class OficinaController {
 
-    private List<Oficina> listaOficinas = new ArrayList<>();
+    private final OficinaService oficinaService;
 
-    public OficinaController() {
-        listaOficinas.add(new Oficina(1, "Oficina Administrativa", "Área principal"));
-        listaOficinas.add(new Oficina(2, "Área Financiera", "Control financiero"));
-        listaOficinas.add(new Oficina(3, "Dirección General", "Gerencia general"));
+    public OficinaController(OficinaService oficinaService) {
+
+        this.oficinaService = oficinaService;
+
+        // DATOS INICIALES
+        if (oficinaService.listar().isEmpty()) {
+
+            oficinaService.guardar(
+                    new Oficina(null,
+                            "Oficina Administrativa",
+                            "Área principal",
+                            "Activo"));
+
+            oficinaService.guardar(
+                    new Oficina(null,
+                            "Área Financiera",
+                            "Control financiero",
+                            "Activo"));
+
+            oficinaService.guardar(
+                    new Oficina(null,
+                            "Dirección General",
+                            "Gerencia institucional",
+                            "Activo"));
+        }
     }
 
     @GetMapping
-    public List<Oficina> obtenerOficinas() {
-        return listaOficinas;
+    public List<Oficina> listar() {
+        return oficinaService.listar();
     }
 
-    // POST - agregar oficina
+    @GetMapping("/{id}")
+    public Oficina buscarPorId(@PathVariable Integer id) {
+        return oficinaService.buscarPorId(id);
+    }
+
     @PostMapping
-    public Oficina agregarOficina(@RequestBody Oficina oficina) {
-        listaOficinas.add(oficina);
-        return oficina;
+    public Oficina guardar(@RequestBody Oficina oficina) {
+        return oficinaService.guardar(oficina);
     }
 
-    @PutMapping("/{codigo}")
-    public Oficina actualizarOficina(@PathVariable int codigo,
-            @RequestBody Oficina oficinaActualizada) {
+    @PutMapping("/{id}")
+    public Oficina actualizar(@PathVariable Integer id,
+                              @RequestBody Oficina datos) {
 
-        for (Oficina oficina : listaOficinas) {
-
-            if (oficina.getCodigo() == codigo) {
-
-                oficina.setNombre(oficinaActualizada.getNombre());
-                oficina.setObservaciones(oficinaActualizada.getObservaciones());
-
-                return oficina;
-            }
-        }
-
-        return null;
+        return oficinaService.actualizar(id, datos);
     }
 
-    @DeleteMapping("/{codigo}")
-    public String eliminarOficina(@PathVariable int codigo) {
+    @DeleteMapping("/{id}")
+    public String eliminar(@PathVariable Integer id) {
 
-        listaOficinas.removeIf(oficina -> oficina.getCodigo() == codigo);
+        oficinaService.eliminar(id);
 
         return "Oficina eliminada correctamente";
     }
