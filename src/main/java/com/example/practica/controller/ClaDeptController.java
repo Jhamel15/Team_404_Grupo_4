@@ -1,6 +1,6 @@
 package com.example.practica.controller;
 
-import com.example.practica.Entity.ClaDept;
+import com.example.practica.entity.ClaDept;
 import com.example.practica.services.ClaDeptService;
 import org.springframework.web.bind.annotation.*;
 

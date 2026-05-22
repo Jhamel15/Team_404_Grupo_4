@@ -1,4 +1,4 @@
-package com.example.practica.Entity;
+package com.example.practica.entity;
 
 import jakarta.persistence.*;
 

@@ -1,6 +1,6 @@
 package com.example.practica.services;
 
-import com.example.practica.Entity.Mes;
+import com.example.practica.entity.Mes;
 import com.example.practica.repository.MesRepository;
 import org.springframework.stereotype.Service;
 
