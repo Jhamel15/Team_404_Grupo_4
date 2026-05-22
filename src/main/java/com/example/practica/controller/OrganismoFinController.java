@@ -1,74 +1,52 @@
 package com.example.practica.controller;
 
-import com.example.practica.model.OrganismoFin;
+import com.example.practica.Entity.OrganismoFin;
+import com.example.practica.services.OrganismoFinService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/organismos")
+@RequestMapping("/api/organismos-fin")
+@CrossOrigin(origins = "*")
 public class OrganismoFinController {
 
-    private List<OrganismoFin> organismos = new ArrayList<>();
+    private final OrganismoFinService service;
 
-    public OrganismoFinController() {
-        organismos.add(new OrganismoFin(2026, 1, "Tesoro General de la Nación", "TGN"));
-        organismos.add(new OrganismoFin(2026, 2, "Donación", "DON"));
-        organismos.add(new OrganismoFin(2026, 3, "Recursos propios", "RP"));
+    public OrganismoFinController(OrganismoFinService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public List<OrganismoFin> listarOrganismos() {
-        return organismos;
+    public List<OrganismoFin> listar() {
+        return service.listarTodos();
     }
 
-    @GetMapping("/{codigoOrganismo}")
-    public OrganismoFin obtenerOrganismo(@PathVariable int codigoOrganismo) {
-        for (OrganismoFin organismo : organismos) {
-            if (organismo.getCodigoOrganismo() == codigoOrganismo) {
-                return organismo;
-            }
-        }
-        return null;
+    @GetMapping("/{id}")
+    public ResponseEntity<OrganismoFin> buscar(@PathVariable Long id) {
+        return service.buscarPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public OrganismoFin crearOrganismo(@RequestBody OrganismoFin nuevoOrganismo) {
-        organismos.add(nuevoOrganismo);
-        return nuevoOrganismo;
+    public OrganismoFin guardar(@RequestBody OrganismoFin organismoFin) {
+        return service.guardar(organismoFin);
     }
 
-    @PutMapping("/{codigoOrganismo}")
-    public OrganismoFin editarOrganismo(
-            @PathVariable int codigoOrganismo,
-            @RequestBody OrganismoFin organismoEditado) {
+    @PutMapping("/{id}")
+    public OrganismoFin actualizar(@PathVariable Long id,
+                                   @RequestBody OrganismoFin organismoFin) {
 
-        for (OrganismoFin organismo : organismos) {
-            if (organismo.getCodigoOrganismo() == codigoOrganismo) {
-
-                organismo.setGestion(organismoEditado.getGestion());
-                organismo.setCodigoOrganismo(organismoEditado.getCodigoOrganismo());
-                organismo.setDescripcion(organismoEditado.getDescripcion());
-                organismo.setSigla(organismoEditado.getSigla());
-
-                return organismo;
-            }
-        }
-
-        return null;
+        return service.actualizar(id, organismoFin);
     }
 
-    @DeleteMapping("/{codigoOrganismo}")
-    public String eliminarOrganismo(@PathVariable int codigoOrganismo) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
 
-        for (OrganismoFin organismo : organismos) {
-            if (organismo.getCodigoOrganismo() == codigoOrganismo) {
-                organismos.remove(organismo);
-                return "Organismo financiador eliminado correctamente";
-            }
-        }
+        service.eliminar(id);
 
-        return "Organismo financiador no encontrado";
+        return ResponseEntity.noContent().build();
     }
 }
