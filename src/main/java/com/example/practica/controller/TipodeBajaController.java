@@ -1,6 +1,6 @@
 package com.example.practica.controller;
 
-import com.example.practica.Entity.TipodeBaja;
+import com.example.practica.entity.TipodeBaja;
 import com.example.practica.services.TipodeBajaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

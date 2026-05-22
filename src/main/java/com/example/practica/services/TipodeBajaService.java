@@ -1,6 +1,6 @@
 package com.example.practica.services;
 
-import com.example.practica.Entity.TipodeBaja;
+import com.example.practica.entity.TipodeBaja;
 import com.example.practica.repository.TipodeBajaRepository;
 import org.springframework.stereotype.Service;
 

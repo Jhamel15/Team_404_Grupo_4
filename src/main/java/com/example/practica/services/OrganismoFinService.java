@@ -1,6 +1,6 @@
 package com.example.practica.services;
 
-import com.example.practica.Entity.OrganismoFin;
+import com.example.practica.entity.OrganismoFin;
 import com.example.practica.repository.OrganismoFinRepository;
 import org.springframework.stereotype.Service;
 

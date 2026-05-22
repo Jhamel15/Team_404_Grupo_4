@@ -1,82 +1,59 @@
 package com.example.practica.controller;
 
-import com.example.practica.model.Mes;
+import com.example.practica.entity.Mes;
+import com.example.practica.services.MesService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/meses")
+@RequestMapping("/api/meses")
 public class MesController {
 
-    private List<Mes> listaMeses = new ArrayList<>();
+    private final MesService mesService;
 
-    public MesController() {
+    public MesController(MesService mesService) {
+        this.mesService = mesService;
 
-        listaMeses.add(new Mes(1L, "Enero", 1));
-        listaMeses.add(new Mes(2L, "Febrero", 2));
-        listaMeses.add(new Mes(3L, "Marzo", 3));
-        listaMeses.add(new Mes(4L, "Abril", 4));
-        listaMeses.add(new Mes(5L, "Mayo", 5));
-        listaMeses.add(new Mes(6L, "Junio", 6));
-        listaMeses.add(new Mes(7L, "Julio", 7));
-        listaMeses.add(new Mes(8L, "Agosto", 8));
-        listaMeses.add(new Mes(9L, "Septiembre", 9));
-        listaMeses.add(new Mes(10L, "Octubre", 10));
-        listaMeses.add(new Mes(11L, "Noviembre", 11));
-        listaMeses.add(new Mes(12L, "Diciembre", 12));
+        if (mesService.listar().isEmpty()) {
+            mesService.guardar(new Mes(null, "Enero", 1));
+            mesService.guardar(new Mes(null, "Febrero", 2));
+            mesService.guardar(new Mes(null, "Marzo", 3));
+            mesService.guardar(new Mes(null, "Abril", 4));
+            mesService.guardar(new Mes(null, "Mayo", 5));
+            mesService.guardar(new Mes(null, "Junio", 6));
+            mesService.guardar(new Mes(null, "Julio", 7));
+            mesService.guardar(new Mes(null, "Agosto", 8));
+            mesService.guardar(new Mes(null, "Septiembre", 9));
+            mesService.guardar(new Mes(null, "Octubre", 10));
+            mesService.guardar(new Mes(null, "Noviembre", 11));
+            mesService.guardar(new Mes(null, "Diciembre", 12));
+        }
     }
 
     @GetMapping
     public List<Mes> obtenerMeses() {
-        return listaMeses;
+        return mesService.listar();
     }
 
     @GetMapping("/{id}")
-    public Mes obtenerMesPorId(@PathVariable Long id) {
-
-        for (Mes mes : listaMeses) {
-
-            if (mes.getId().equals(id)) {
-                return mes;
-            }
-        }
-
-        return null;
+    public Mes obtenerMesPorId(@PathVariable Integer id) {
+        return mesService.buscarPorId(id).orElse(null);
     }
 
     @PostMapping
     public Mes agregarMes(@RequestBody Mes mes) {
-
-        listaMeses.add(mes);
-
-        return mes;
+        return mesService.guardar(mes);
     }
 
     @PutMapping("/{id}")
-    public Mes actualizarMes(@PathVariable Long id,
-                             @RequestBody Mes mesActualizado) {
-
-        for (Mes mes : listaMeses) {
-
-            if (mes.getId().equals(id)) {
-
-                mes.setNombre(mesActualizado.getNombre());
-                mes.setNumero(mesActualizado.getNumero());
-
-                return mes;
-            }
-        }
-
-        return null;
+    public Mes actualizarMes(@PathVariable Integer id, @RequestBody Mes mesActualizado) {
+        return mesService.actualizar(id, mesActualizado);
     }
 
     @DeleteMapping("/{id}")
-    public String eliminarMes(@PathVariable Long id) {
-
-        listaMeses.removeIf(mes -> mes.getId().equals(id));
-
+    public String eliminarMes(@PathVariable Integer id) {
+        mesService.eliminar(id);
         return "Mes eliminado correctamente";
     }
 }
