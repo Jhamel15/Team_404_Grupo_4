@@ -1,9 +1,10 @@
 package com.example.practica.controller;
 
-import com.example.practica.Entity.Oficina;
+import com.example.practica.entity.OficinaEntity;
 import com.example.practica.services.OficinaService;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -13,50 +14,42 @@ public class OficinaController {
     private final OficinaService oficinaService;
 
     public OficinaController(OficinaService oficinaService) {
-
         this.oficinaService = oficinaService;
 
-        // DATOS INICIALES
         if (oficinaService.listar().isEmpty()) {
 
             oficinaService.guardar(
-                    new Oficina(null,
-                            "Oficina Administrativa",
-                            "Área principal",
-                            "Activo"));
-
-            oficinaService.guardar(
-                    new Oficina(null,
-                            "Área Financiera",
-                            "Control financiero",
-                            "Activo"));
-
-            oficinaService.guardar(
-                    new Oficina(null,
-                            "Dirección General",
-                            "Gerencia institucional",
-                            "Activo"));
+                    new OficinaEntity(
+        null,
+        "FINANZAS",
+        "ADMINISTRACION",
+        "OF001",
+        "OFICINA CENTRAL",
+        "OFICINA PRINCIPAL",
+        LocalDateTime.now(),
+        "saul",
+        "ACTIVO"
+)
+            );
         }
     }
 
     @GetMapping
-    public List<Oficina> listar() {
+    public List<OficinaEntity> listar() {
         return oficinaService.listar();
     }
 
-    @GetMapping("/{id}")
-    public Oficina buscarPorId(@PathVariable Integer id) {
-        return oficinaService.buscarPorId(id);
-    }
-
     @PostMapping
-    public Oficina guardar(@RequestBody Oficina oficina) {
+    public OficinaEntity guardar(
+            @RequestBody OficinaEntity oficina) {
+
         return oficinaService.guardar(oficina);
     }
 
     @PutMapping("/{id}")
-    public Oficina actualizar(@PathVariable Integer id,
-                              @RequestBody Oficina datos) {
+    public OficinaEntity actualizar(
+            @PathVariable Integer id,
+            @RequestBody OficinaEntity datos) {
 
         return oficinaService.actualizar(id, datos);
     }

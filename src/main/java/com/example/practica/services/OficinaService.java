@@ -1,6 +1,6 @@
 package com.example.practica.services;
 
-import com.example.practica.Entity.Oficina;
+import com.example.practica.entity.OficinaEntity;
 import com.example.practica.repository.OficinaRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,27 +15,28 @@ public class OficinaService {
         this.oficinaRepository = oficinaRepository;
     }
 
-    public List<Oficina> listar() {
+    public List<OficinaEntity> listar() {
         return oficinaRepository.findAll();
     }
 
-    public Oficina buscarPorId(Integer id) {
-        return oficinaRepository.findById(id).orElse(null);
-    }
-
-    public Oficina guardar(Oficina oficina) {
+    public OficinaEntity guardar(OficinaEntity oficina) {
         return oficinaRepository.save(oficina);
     }
 
-    public Oficina actualizar(Integer id, Oficina datos) {
+    public OficinaEntity actualizar(Integer id, OficinaEntity datos) {
 
-        Oficina oficina = oficinaRepository.findById(id).orElse(null);
+        OficinaEntity oficina =
+                oficinaRepository.findById(id).orElse(null);
 
         if (oficina != null) {
 
-            oficina.setNombre(datos.getNombre());
-            oficina.setDescripcion(datos.getDescripcion());
-            oficina.setEstado(datos.getEstado());
+            oficina.setEntidad(datos.getEntidad());
+            oficina.setUnidad(datos.getUnidad());
+            oficina.setNomofic(datos.getNomofic());
+            oficina.setObserv(datos.getObserv());
+            oficina.setFeult(datos.getFeult());
+            oficina.setUsuar(datos.getUsuar());
+            oficina.setApi_estado(datos.getApi_estado());
 
             return oficinaRepository.save(oficina);
         }
