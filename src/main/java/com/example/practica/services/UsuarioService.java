@@ -15,16 +15,16 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public List<Usuario> listar() {
+    public List<UsuarioEntity> listar() {
         return usuarioRepository.findAll();
     }
 
-    public Usuario guardar(Usuario usuario) {
+    public UsuarioEntity guardar(UsuarioEntity usuario) {
         return usuarioRepository.save(usuario);
     }
 
-    public Usuario actualizar(Integer id, Usuario datos) {
-        Usuario usuario = usuarioRepository.findById(id).orElse(null);
+    public UsuarioEntity actualizar(Integer id, UsuarioEntity datos) {
+        UsuarioEntity usuario = usuarioRepository.findById(id).orElse(null);
 
         if (usuario != null) {
             usuario.setNombre(datos.getNombre());

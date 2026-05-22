@@ -1,10 +1,10 @@
-package com.example.practica.Entity;
+package com.example.practica.entity;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "usuario")
-public class Usuario {
+public class UsuarioEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,10 +19,10 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
-    public Usuario() {
+    public UsuarioEntity() {
     }
 
-    public Usuario(Integer codusuario, String nombre, String correo, String password) {
+    public UsuarioEntity(Integer codusuario, String nombre, String correo, String password) {
         this.codusuario = codusuario;
         this.nombre = nombre;
         this.correo = correo;
