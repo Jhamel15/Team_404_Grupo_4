@@ -2,6 +2,7 @@ package com.example.practica.controller;
 
 import com.example.practica.entity.ClaDept;
 import com.example.practica.services.ClaDeptService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,18 +22,41 @@ public class ClaDeptController {
         return claDeptService.obtenerTodos();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ClaDept> buscarPorId(@PathVariable Long id) {
+        ClaDept departamento = claDeptService.buscarPorId(id);
+
+        if (departamento == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(departamento);
+    }
+
     @PostMapping
-    public ClaDept guardar(@RequestBody ClaDept depto) {
-        return claDeptService.guardar(depto);
+    public ResponseEntity<ClaDept> guardar(@RequestBody ClaDept depto) {
+        return ResponseEntity.ok(claDeptService.guardar(depto));
     }
 
     @PutMapping("/{id}")
-    public ClaDept actualizar(@PathVariable Long id, @RequestBody ClaDept deptoActualizado) {
-        return claDeptService.actualizar(id, deptoActualizado);
+    public ResponseEntity<ClaDept> actualizar(@PathVariable Long id, @RequestBody ClaDept deptoActualizado) {
+        ClaDept actualizado = claDeptService.actualizar(id, deptoActualizado);
+
+        if (actualizado == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(actualizado);
     }
 
     @DeleteMapping("/{id}")
-    public String eliminar(@PathVariable Long id) {
-        return claDeptService.eliminar(id);
+    public ResponseEntity<String> eliminar(@PathVariable Long id) {
+        boolean eliminado = claDeptService.eliminar(id);
+
+        if (!eliminado) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok("Departamento eliminado correctamente");
     }
 }

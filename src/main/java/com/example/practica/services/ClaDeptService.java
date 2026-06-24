@@ -19,6 +19,10 @@ public class ClaDeptService {
         return claDeptRepository.findAll();
     }
 
+    public ClaDept buscarPorId(Long id) {
+        return claDeptRepository.findById(id).orElse(null);
+    }
+
     public ClaDept guardar(ClaDept depto) {
         return claDeptRepository.save(depto);
     }
@@ -32,11 +36,12 @@ public class ClaDeptService {
         }).orElse(null);
     }
 
-    public String eliminar(Long id) {
-        if (claDeptRepository.existsById(id)) {
-            claDeptRepository.deleteById(id);
-            return "Departamento eliminado";
+    public boolean eliminar(Long id) {
+        if (!claDeptRepository.existsById(id)) {
+            return false;
         }
-        return "No se encontró el departamento";
+
+        claDeptRepository.deleteById(id);
+        return true;
     }
 }
