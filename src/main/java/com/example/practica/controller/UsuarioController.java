@@ -1,98 +1,62 @@
-
 package com.example.practica.controller;
 
-import com.example.practica.model.Usuario;
-import java.util.ArrayList;
-import java.util.Iterator;
+import com.example.practica.entity.Usuario;
+import com.example.practica.services.UsuarioService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping({"/usuarios"})
+@RequestMapping("/api/usuarios")
 public class UsuarioController {
-   private List<Usuario> listaUsuarios = new ArrayList();
 
-   public UsuarioController() {
-      this.listaUsuarios.add(new Usuario(1, "Juan Perez", "juan@gmail.com"));
-      this.listaUsuarios.add(new Usuario(2, "Maria Lopez", "maria@gmail.com"));
-      this.listaUsuarios.add(new Usuario(3, "Carlos Rojas", "carlos@gmail.com"));
-   }
+    private final UsuarioService usuarioService;
 
-   @GetMapping
-   public String obtenerUsuarios() {
-      String datos = "";
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
-      for(Iterator var2 = this.listaUsuarios.iterator(); var2.hasNext(); datos = datos + "-------------------------<br><br>") {
-         Usuario usuario = (Usuario)var2.next();
-         datos = datos + "ID: " + usuario.getId() + "<br>";
-         datos = datos + "Nombre: " + usuario.getNombre() + "<br>";
-         datos = datos + "Correo: " + usuario.getCorreo() + "<br>";
-      }
+    @GetMapping
+    public List<Usuario> listar() {
+        return usuarioService.listar();
+    }
 
-      return datos;
-   }
+    @GetMapping("/{id}")
+    public ResponseEntity<Usuario> buscarPorId(@PathVariable Integer id) {
+        Usuario usuario = usuarioService.buscarPorId(id);
 
-   @GetMapping({"/{id}"})
-   public Usuario obtenerUsuarioPorId(@PathVariable int id) {
-      Iterator var2 = this.listaUsuarios.iterator();
+        if (usuario == null) {
+            return ResponseEntity.notFound().build();
+        }
 
-      Usuario usuario;
-      do {
-         if (!var2.hasNext()) {
-            return null;
-         }
+        return ResponseEntity.ok(usuario);
+    }
 
-         usuario = (Usuario)var2.next();
-      } while(usuario.getId() != id);
+    @PostMapping
+    public Usuario guardar(@RequestBody Usuario usuario) {
+        return usuarioService.guardar(usuario);
+    }
 
-      return usuario;
-   }
+    @PutMapping("/{id}")
+    public ResponseEntity<Usuario> actualizar(@PathVariable Integer id, @RequestBody Usuario datos) {
+        Usuario usuarioActualizado = usuarioService.actualizar(id, datos);
 
-   @PostMapping
-   public String agregarUsuario(@RequestBody Usuario usuario) {
-      this.listaUsuarios.add(usuario);
-      return "Usuario agregado correctamente";
-   }
+        if (usuarioActualizado == null) {
+            return ResponseEntity.notFound().build();
+        }
 
-   @PutMapping({"/{id}"})
-   public String actualizarUsuario(@PathVariable int id, @RequestBody Usuario usuarioActualizado) {
-      Iterator var3 = this.listaUsuarios.iterator();
+        return ResponseEntity.ok(usuarioActualizado);
+    }
 
-      Usuario usuario;
-      do {
-         if (!var3.hasNext()) {
-            return "Usuario no encontrado";
-         }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminar(@PathVariable Integer id) {
+        boolean eliminado = usuarioService.eliminar(id);
 
-         usuario = (Usuario)var3.next();
-      } while(usuario.getId() != id);
+        if (!eliminado) {
+            return ResponseEntity.notFound().build();
+        }
 
-      usuario.setNombre(usuarioActualizado.getNombre());
-      usuario.setCorreo(usuarioActualizado.getCorreo());
-      return "Usuario actualizado correctamente";
-   }
-
-   @DeleteMapping({"/{id}"})
-   public String eliminarUsuario(@PathVariable int id) {
-      Iterator var2 = this.listaUsuarios.iterator();
-
-      Usuario usuario;
-      do {
-         if (!var2.hasNext()) {
-            return "Usuario no encontrado";
-         }
-
-         usuario = (Usuario)var2.next();
-      } while(usuario.getId() != id);
-
-      this.listaUsuarios.remove(usuario);
-      return "Usuario eliminado correctamente";
-   }
+        return ResponseEntity.ok("Usuario eliminado correctamente");
+    }
 }

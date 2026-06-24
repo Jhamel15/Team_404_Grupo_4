@@ -19,6 +19,10 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
+    public Usuario buscarPorId(Integer id) {
+        return usuarioRepository.findById(id).orElse(null);
+    }
+
     public Usuario guardar(Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
@@ -26,18 +30,23 @@ public class UsuarioService {
     public Usuario actualizar(Integer id, Usuario datos) {
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
 
-        if (usuario != null) {
-            usuario.setNombre(datos.getNombre());
-            usuario.setCorreo(datos.getCorreo());
-            usuario.setPassword(datos.getPassword());
-
-            return usuarioRepository.save(usuario);
+        if (usuario == null) {
+            return null;
         }
 
-        return null;
+        usuario.setNombre(datos.getNombre());
+        usuario.setCorreo(datos.getCorreo());
+        usuario.setPassword(datos.getPassword());
+
+        return usuarioRepository.save(usuario);
     }
 
-    public void eliminar(Integer id) {
+    public boolean eliminar(Integer id) {
+        if (!usuarioRepository.existsById(id)) {
+            return false;
+        }
+
         usuarioRepository.deleteById(id);
+        return true;
     }
 }

@@ -43,7 +43,12 @@ public class OficinaService {
         return null;
     }
 
-    public void eliminar(Integer id) {
+    public boolean eliminar(Integer id) {
+        if (!oficinaRepository.existsById(id)) {
+            return false;
+        }
+
         oficinaRepository.deleteById(id);
+        return true;
     }
 }

@@ -38,7 +38,12 @@ public class MesService {
         return null;
     }
 
-    public void eliminar(Integer id) {
+    public boolean eliminar(Integer id) {
+        if (!mesRepository.existsById(id)) {
+            return false;
+        }
+
         mesRepository.deleteById(id);
+        return true;
     }
 }

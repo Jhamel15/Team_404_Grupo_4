@@ -19,6 +19,10 @@ public class EstadoService {
         return estadoRepository.findAll();
     }
 
+    public Estado buscarPorId(Integer id) {
+        return estadoRepository.findById(id).orElse(null);
+    }
+
     public Estado guardar(Estado estado) {
         return estadoRepository.save(estado);
     }
@@ -26,15 +30,20 @@ public class EstadoService {
     public Estado actualizar(Integer id, Estado datos) {
         Estado estado = estadoRepository.findById(id).orElse(null);
 
-        if (estado != null) {
-            estado.setNomestado(datos.getNomestado());
-            return estadoRepository.save(estado);
+        if (estado == null) {
+            return null;
         }
 
-        return null;
+        estado.setNomestado(datos.getNomestado());
+        return estadoRepository.save(estado);
     }
 
-    public void eliminar(Integer id) {
+    public boolean eliminar(Integer id) {
+        if (!estadoRepository.existsById(id)) {
+            return false;
+        }
+
         estadoRepository.deleteById(id);
+        return true;
     }
 }

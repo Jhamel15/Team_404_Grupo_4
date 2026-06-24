@@ -2,6 +2,7 @@ package com.example.practica.controller;
 
 import com.example.practica.entity.Oficina;
 import com.example.practica.services.OficinaService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,30 +14,7 @@ public class OficinaController {
     private final OficinaService oficinaService;
 
     public OficinaController(OficinaService oficinaService) {
-
         this.oficinaService = oficinaService;
-
-        // DATOS INICIALES
-        if (oficinaService.listar().isEmpty()) {
-
-            oficinaService.guardar(
-                    new Oficina(null,
-                            "Oficina Administrativa",
-                            "Área principal",
-                            "Activo"));
-
-            oficinaService.guardar(
-                    new Oficina(null,
-                            "Área Financiera",
-                            "Control financiero",
-                            "Activo"));
-
-            oficinaService.guardar(
-                    new Oficina(null,
-                            "Dirección General",
-                            "Gerencia institucional",
-                            "Activo"));
-        }
     }
 
     @GetMapping
@@ -45,8 +23,14 @@ public class OficinaController {
     }
 
     @GetMapping("/{id}")
-    public Oficina buscarPorId(@PathVariable Integer id) {
-        return oficinaService.buscarPorId(id);
+    public ResponseEntity<Oficina> buscarPorId(@PathVariable Integer id) {
+        Oficina oficina = oficinaService.buscarPorId(id);
+
+        if (oficina == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(oficina);
     }
 
     @PostMapping
@@ -55,17 +39,24 @@ public class OficinaController {
     }
 
     @PutMapping("/{id}")
-    public Oficina actualizar(@PathVariable Integer id,
-                              @RequestBody Oficina datos) {
+    public ResponseEntity<Oficina> actualizar(@PathVariable Integer id, @RequestBody Oficina datos) {
+        Oficina oficinaActualizada = oficinaService.actualizar(id, datos);
 
-        return oficinaService.actualizar(id, datos);
+        if (oficinaActualizada == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(oficinaActualizada);
     }
 
     @DeleteMapping("/{id}")
-    public String eliminar(@PathVariable Integer id) {
+    public ResponseEntity<String> eliminar(@PathVariable Integer id) {
+        boolean eliminado = oficinaService.eliminar(id);
 
-        oficinaService.eliminar(id);
+        if (!eliminado) {
+            return ResponseEntity.notFound().build();
+        }
 
-        return "Oficina eliminada correctamente";
+        return ResponseEntity.ok("Oficina eliminada correctamente");
     }
 }
